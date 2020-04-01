@@ -12,7 +12,8 @@ from torchvision import transforms
 
 
 # Device configuration
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device1 = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+device2 = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
 
 def main(args):
     # Create model directory
@@ -37,8 +38,8 @@ def main(args):
                              shuffle=True, num_workers=args.num_workers) 
 
     # Build the models
-    encoder = EncoderCNN(args.embed_size).to(device)
-    decoder = DecoderRNN(args.embed_size, args.hidden_size, len(vocab), args.num_layers).to(device)
+    encoder = EncoderCNN(args.embed_size).to(device1)
+    decoder = DecoderRNN(args.embed_size, args.hidden_size, len(vocab), args.num_layers).to(device2)
     
     # Loss and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -51,8 +52,8 @@ def main(args):
         for i, (images, captions, lengths) in enumerate(data_loader):
             
             # Set mini-batch dataset
-            images = images.to(device)
-            captions = captions.to(device)
+            images = images.to(device1)
+            captions = captions.to(device1)
             targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
             
             # Forward, backward and optimize
