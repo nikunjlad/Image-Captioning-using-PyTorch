@@ -28,9 +28,11 @@ class Vocabulary(object):
 
 def build_vocab(json, threshold):
     """Build a simple vocabulary wrapper."""
-    coco = COCO(json)
-    counter = Counter()
-    ids = coco.anns.keys()
+    coco = COCO(json)   # coco object holding annotations (5 annotations per image), image ids, categories and images
+    counter = Counter()   # counter object from collections library to hold the word and corresponding word frequency.
+
+    # total number of captions in the dataset. An image has 5 captions, therefore total captions = 414113
+    ids = coco.anns.keys()    # 
     for i, id in enumerate(ids):
         caption = str(coco.anns[id]['caption'])
         tokens = nltk.tokenize.word_tokenize(caption.lower())
