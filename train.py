@@ -58,8 +58,8 @@ def main(args):
             
             # Forward, backward and optimize
             features = encoder(images)
-            outputs = decoder(features, captions, lengths)
-            loss = criterion(outputs, targets)
+            outputs = decoder(features.to(device2), captions.to(device2), lengths)
+            loss = criterion(outputs.cpu(), targets.cpu())
             decoder.zero_grad()
             encoder.zero_grad()
             loss.backward()
