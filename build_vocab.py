@@ -9,21 +9,26 @@ class Vocabulary(object):
     """Simple vocabulary wrapper."""
 
     def __init__(self):
-        self.word2idx = {}
-        self.idx2word = {}
-        self.idx = 0
+        self.word2idx = {}     # initializing word to index dictionary to encode words prior to training
+        self.idx2word = {}     # initializing index to word dictionary to decode predictions post training
+        self.idx = 0     # inital mapping index set to 0
 
     def add_word(self, word):
-        if not word in self.word2idx:
-            self.word2idx[word] = self.idx
-            self.idx2word[self.idx] = word
-            self.idx += 1
 
+        # if word not present in dictionary, add it to the dictionary and map it to the index
+        if not word in self.word2idx:
+            self.word2idx[word] = self.idx   # word -> index
+            self.idx2word[self.idx] = word     # index -> word
+            self.idx += 1   # increment counter by 1
+
+    # call function called if instance of Vocabulary class acts like a function.
+    # if a word is given, return the index of the word if it exists
     def __call__(self, word):
         if not word in self.word2idx:
             return self.word2idx['<unk>']
         return self.word2idx[word]
 
+    # return length of the word to index function
     def __len__(self):
         return len(self.word2idx)
 
@@ -50,12 +55,16 @@ def build_vocab(json, threshold):
 
     # Create a vocab wrapper and add some special tokens.
     vocab = Vocabulary()  # create a vocabulary object
-    vocab.add_word('<pad>')
+    vocab.add_word('<pad>')   # adding some checkpoint words like start, end, pad, etc to our vocabulary
     vocab.add_word('<start>')
     vocab.add_word('<end>')
     vocab.add_word('<unk>')
 
-    # Add the words to the vocabulary.
+    # just for understanding effect of __call__ function.
+    # here the vocab object acts like a function. This will invoke the __call__ method
+    print('Index of <unk>:', vocab('<unk>'))
+
+    # Add the words to the vocabulary by iterating over them one by one
     for i, word in enumerate(words):
         vocab.add_word(word)
     return vocab
