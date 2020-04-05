@@ -40,8 +40,8 @@ def main(args):
     decoder = decoder.to(device)
 
     # Load the trained model parameters
-    encoder.load_state_dict(torch.load(args.encoder_path))
-    decoder.load_state_dict(torch.load(args.decoder_path))
+    encoder.load_state_dict(torch.load(args.encoder_path, map_location=torch.device('cpu')))
+    decoder.load_state_dict(torch.load(args.decoder_path, map_location=torch.device('cpu')))
 
     # Prepare an image
     image = load_image(args.image, transform)
@@ -68,7 +68,7 @@ def main(args):
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--image', type=str, required=True, help='input image for generating caption')
+    parser.add_argument('--image', type=str, default='images/running.jpg', help='input image for generating caption')
     parser.add_argument('--encoder_path', type=str, default='models/encoder-5-3000.ckpt', help='path for trained encoder')
     parser.add_argument('--decoder_path', type=str, default='models/decoder-5-3000.ckpt', help='path for trained decoder')
     parser.add_argument('--vocab_path', type=str, default='data/vocab.pkl', help='path for vocabulary wrapper')
@@ -78,4 +78,5 @@ if __name__ == '__main__':
     parser.add_argument('--hidden_size', type=int , default=512, help='dimension of lstm hidden states')
     parser.add_argument('--num_layers', type=int , default=1, help='number of layers in lstm')
     args = parser.parse_args()
+    print(args.image)
     main(args)
