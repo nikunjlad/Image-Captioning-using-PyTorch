@@ -9,7 +9,9 @@ from build_vocab import Vocabulary
 from model import EncoderCNN, DecoderRNN
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
-
+from matplotlib import pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 
 # Device configuration
 device1 = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
