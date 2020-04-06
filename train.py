@@ -74,20 +74,23 @@ def main(args):
             outputs = decoder(features.to(device2), captions.to(device2), lengths)
             loss = criterion(outputs.cpu(), targets.cpu())
             total_loss += loss.item()
-            decoder.zero_grad()
-            encoder.zero_grad()
-            loss.backward()
-            optimizer.step()
+            decoder.zero_grad()    # initialize the gradients to 0 before decoder backprop
+            encoder.zero_grad()   # initialize the gradients to 0 before encoder backprop as well
+            loss.backward()    # compute loss
+            optimizer.step()   # perform a single optimization step
 
             # Print log info
             if i % args.log_step == 0:
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                       .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item())))
 
-                # Save the model checkpoints
+            # Save the model checkpoints after every 1000 steps
             if (i + 1) % args.save_step == 0:
+                # save the decoder model after 1000 steps
                 torch.save(decoder.state_dict(), os.path.join(
                     args.model_path, 'decoder-{}-{}.ckpt'.format(epoch + 1, i + 1)))
+
+                # save the encoder model after 1000 steps
                 torch.save(encoder.state_dict(), os.path.join(
                     args.model_path, 'encoder-{}-{}.ckpt'.format(epoch + 1, i + 1)))
 
