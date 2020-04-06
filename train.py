@@ -116,7 +116,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--num_workers', type=int, default=2)
     parser.add_argument('--learning_rate', type=float, default=0.001)
-    parser.add_argument('--plt-name', type=float, default="", help="name of the plot files to export curves PNG")
+    parser.add_argument('--plt-name', type=str, default="", help="name of the plot files to export curves PNG")
     args = parser.parse_args()
     print(args)
     main(args)
